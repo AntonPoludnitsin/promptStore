@@ -1,7 +1,19 @@
-class Menu {
+class MainMenu {
   constructor() {
     this.title = 'Главная страница';
     this.actionListItems = ['Товары', 'Корзина'];
+    this.menu = [{
+      name: 'Товары',
+      action: function () {
+        this.goto();// to goods
+      }
+    },
+    {
+      name: 'Корзина',
+      action: function () {
+        this.goto();//to Cart
+      }
+    }]
     this.value = null;
     this.cart = [];
   };
@@ -15,31 +27,62 @@ class Menu {
     );
   };
   actionListBody() {
-    let items = this.actionListItems;
-    let body = '';
-    for (let i = 0; i < items.length; i++) {
+    let listTitle = this.actionListItems;
+    let body = listTitle.map(item => listTitle.indexOf(item) + 1 + '. ' + item + '\n').join("");
+    /* for (let i = 0; i < items.length; i++) {
       body += `${i + 1}. ${items[i]}\n`;
-    }
+    } */
     return body;
   };
-
 };
 
-let menu = new Menu();
+let menu = new MainMenu();
 
-class MenuGoods extends Menu {
+class MenuGoods extends MainMenu {
   constructor() {
     super();
-    this.title = 'Страница товаров';    
-    this.actionListItems = ['Товар 1', 'Товар 2', 'Корзина', 'Оплата', 'Вернутся на главную страницу'];
+    this.title = 'Страница товаров';
+    this.actionListItems = ['Товар 1', 'Товар 2', 'Корзина', 'Оплата', 'Вернуться на главную страницу'];
+    this.menu = [
+      {
+        name: 'Товар1',
+        action: function () {
+          this.addedCart();
+        }
+      },
+      {
+        name: 'Товар2',
+        action: function () {
+          this.addedCart();
+        }
+      },
+      {
+        name: 'Корзина',
+        action: function () {
+          this.goto();//to Cart
+        }
+      },
+      {
+        name: 'Оплата',
+        action: function () {
+          this.pay();
+        }
+      },
+      {
+        name: 'Вернуться на главную страницу',
+        action: function () {
+          this.goto();//to MainMenu
+        }
+      }
+    ];
+
   };
+
   addedCart() {
     this.actionList();
     while (this.value === "1" || this.value === "2") {
       this.cart = this.cart.concat(this.actionListItems[this.value - 1]);
       this.actionList();
-      console.log(this.cart);
-      console.log(this.value);
     }
     if (this.value === "5") {
       menu.actionList();
@@ -49,20 +92,32 @@ class MenuGoods extends Menu {
       cart.actionList();
     }
   };
+
+
 };
 
 let goods = new MenuGoods();
 
-class MenuCart extends Menu {
+class MenuCart extends MainMenu {
   constructor() {
     super();
-    this.title = 'Корзины';    
+    this.title = 'Корзины';
     this.actionListItems = ['Оплата', 'Вернутся на главную страницу'];
+    this.menu = [{
+      name: 'Оплата',
+      action: function () {
+        this.pay();
+      }
+    },
+      {
+        name: 'Вернуться на главную страницу',
+        action: function () {
+          this.goto();//to MainMenu
+        }
+      }
+    ];
+
   };
 };
 
 let cart = new MenuCart();
-
-
-
-
