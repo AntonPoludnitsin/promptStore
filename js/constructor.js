@@ -1,111 +1,137 @@
-class MainMenu {
+let titleCart = [];
+
+class Menu {
   constructor() {
     this.title = 'Главная страница';
-    this.menu = [{
-      id: 0,
-      name: 'Товары',
-      action: function () {
-        menu.actionList();
-      }
-    },
-    {
-      id: 1,
-      name: 'Корзина',
-      action: function () {
-        this.goto();//to Cart
-      }
-    }]
+    this.menu = [];
     this.value = null;
-    this.cart = [];
   };
   print() {
-    return alert("Нет такого пукта меню");
+    alert("Нет такого пукта меню");
+    this.show()
   };
+  actionList() {
+    return this.value = prompt(
+      'Добро пожаловать в наш магазин!\n');
+  };
+  actionListBody() {
+    let counter = 0;
+    let body = this.menu.map(item => {
+      counter++;
+      return counter + '. ' + item.name + '\n'
+    }).join("");
+    return body;
+  };
+  show() {
+    this.actionList();
+  };
+};
+
+class MainMenu extends Menu {
+  constructor() {
+    super();
+    this.menu = [{
+      name: 'Товары',
+      action: () => goods.addedCart()
+    },
+    {
+      name: 'Корзина',
+      action: () => cart.show()
+    }];
+
+  };
+
   actionList() {
     return this.value = prompt(
       'Добро пожаловать в наш магазин!\n' +
       `Страница: ${this.title}\nМеню:\n${this.actionListBody()}`,
     );
   };
-  actionListBody() {
-    let body = this.menu.map(item => (item.id + 1) + '. ' + item.name + '\n').join("");    
-    return body;
+
+  print() {
+    alert("Нет такого пукта меню");
+    this.show();
   };
+
   show() {
     this.actionList();
-    if (+this.value === 1) {
-      goods.actionList()
-    }
-    if (+this.value === 2) {
-      cart.actionList()
+    if (+this.value > this.menu.length) {
+      this.print();
+    } else {
+      this.menu[this.value - 1].action();
     }
   }
 };
 
 let menu = new MainMenu();
 
-class MenuGoods extends MainMenu {
+class MenuGoods extends Menu {
   constructor() {
     super();
     this.title = 'Страница товаров';
     this.menu = [
       {
-        id: 0,
         name: 'Товар1',
-        action: function () {
+        action: () => {
+          titleCart.push(this.menu[this.value - 1]);
           this.addedCart();
         }
       },
       {
-        id: 1,
         name: 'Товар2',
-        action: function () {
+        action: () => {
+          titleCart.push(this.menu[this.value - 1]);
           this.addedCart();
         }
       },
       {
-        id: 2,
         name: 'Корзина',
-        action: function () {
-          this.goto();//to Cart
+        action: () => {
+          cart.menu = titleCart.concat(cart.menu);
+          cart.show();
         }
       },
       {
-        id: 3,
         name: 'Оплата',
         action: function () {
           this.pay();
         }
       },
       {
-        id: 4,
         name: 'Вернуться на главную страницу',
-        action: function () {
-          this.goto();//to MainMenu
-        }
+        action: () => menu.show()
       }
     ];
+
   };
 
+  actionList() {
+    return this.value = prompt(
+      'Добро пожаловать в наш магазин!\n' +
+      'Корзина ' + titleCart.length + '\n' +
+      `Страница: ${this.title}\nМеню:\n${this.actionListBody()}`,
+    );
+  };
+
+  print() {
+    alert("Нет такого пукта меню");
+    this.addedCart();
+
+  };
   addedCart() {
     this.actionList();
-    while (this.value === "1" || this.value === "2") {
-      //this.cart = this.cart.concat(this.actionListItems[this.value - 1]);
-      this.actionList();
-    }
-    if (this.value === "5") {
-      menu.actionList();
-    }
-    if (this.value === "3") {
-      cart.actionListItems = this.cart.concat(cart.actionListItems);
-      cart.actionList();
+    if (+this.value > this.menu.length) {
+      this.print();
+    } else {
+      this.menu[this.value - 1].action();
     }
   };
+
 };
 
 let goods = new MenuGoods();
 
-class MenuCart extends MainMenu {
+class MenuCart extends Menu {
   constructor() {
     super();
     this.title = 'Корзины';    
@@ -117,12 +143,35 @@ class MenuCart extends MainMenu {
     },
     {
       name: 'Вернуться на главную страницу',
-      action: function () {
-        this.goto();//to MainMenu
-      }
+      action: () => menu.show()
     }
-    ];
+    ]
   };
+  
+  actionList() {
+    return this.value = prompt(
+      'Добро пожаловать в наш магазин!\n' +
+      `Страница: ${this.title}\nМеню:\n${this.actionListBody()}`,
+    );
+  };
+  actionListBody() {
+    let counter = 0;    
+    let body = this.menu.map(item => {
+      counter++;
+      return counter + '. ' + item.name + '\n'
+    }).join("");
+    return body;    
+  };
+
+  show() {    
+    this.actionList();
+    if (+this.value === this.menu.length || 
+      +this.value === this.menu.length -1) {
+      this.menu[this.value - 1].action();      
+    } else {
+      this.print();
+    }
+  }
 };
 
 let cart = new MenuCart();
