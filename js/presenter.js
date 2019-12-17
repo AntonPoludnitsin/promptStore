@@ -1,16 +1,3 @@
-let modelCart = [];
-let cartEnding = [{
-  name: 'Оплата',
-  action: function () {
-    this.pay();
-  }
-},
-{
-  name: 'Вернуться на главную страницу',
-  action: () => menu.show()
-}
-];
-
 class Menu {
   constructor() {
     this.title = 'Главная страница';
@@ -79,14 +66,14 @@ class MenuGoods extends Menu {
     this.title = 'Страница товаров';
     this.menu = [
       {
-        name: 'Товар1',
+        name: data[0].title,
         action: () => {
           modelCart.unshift({ name: this.menu[this.value - 1].name });
           this.addedCart();
         }
       },
       {
-        name: 'Товар2',
+        name: data[1].title,
         action: () => {
           modelCart.unshift({ name: this.menu[this.value - 1].name });
           this.addedCart();
